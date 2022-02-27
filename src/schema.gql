@@ -1,0 +1,40 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Weather {
+  temp: Float!
+  humidity: Float!
+}
+
+type Account {
+  bank: String!
+  branch: String!
+  address: String!
+  city: String!
+  district: String!
+  state: String!
+  bank_code: String!
+  weather: Weather!
+}
+
+type UserOutput {
+  id: Int!
+  name: String!
+  accounts: [Account!]!
+}
+
+type Query {
+  user(id: Int!): UserOutput!
+}
+
+type Mutation {
+  addAccountDetails(data: CreateUserInput!): UserOutput!
+}
+
+input CreateUserInput {
+  """Example field (placeholder)"""
+  user_id: Int!
+  user_name: String!
+  bank_accounts: [String!]!
+}
