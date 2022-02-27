@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Account } from './entities/account.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { WeatherService } from '../weather/weather.service';
+import { AccountOutput } from './dto/account.output';
 
 @Injectable()
 export class AccountService {
@@ -40,8 +41,10 @@ export class AccountService {
     return await this.getAccountDetails(ifsc);
   }
 
-  async weather(city) {
-    const weather = await this.weatherService.getWeather(city);
-    return weather;
+  async resolveAccountWeather(ifscCode: string): Promise<AccountOutput> {
+    const account = await this.getAccountDetails(ifscCode);
+    const weather = await this.weatherService.getWeather(account.city);
+    // const accountObject = console.log(accountObject, 'PPPPP');
+    return { ...account, weather }; //accountObject;
   }
 }

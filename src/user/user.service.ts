@@ -40,6 +40,7 @@ export class UserService {
   }
 
   async findOne(userId: number) {
+    const ifsc_code = [];
     const result = await this.userRepository.find({ user_id: userId });
     const resultMapping = {
       id: result[0].user_id,
@@ -47,8 +48,33 @@ export class UserService {
       accounts: [],
     };
     for (let i = 0; i < result.length; i++) {
-      resultMapping.accounts.push(result[0].ifsc_code);
+      ifsc_code.push(result[0].ifsc_code);
     }
+    for (let i = 0; i < ifsc_code.length; i++) {
+      resultMapping.accounts.push(
+        await this.accountService.resolveAccountWeather(ifsc_code[i]),
+      );
+    }
+    // {
+    //   name: 'user1',
+    //       id: 7,
+    //     accounts: [
+    //   {
+    //     bank: 'String!',
+    //     branch: 'String!',
+    //     address: 'String!',
+    //     city: 'String!',
+    //     district: 'String!',
+    //     state: ' String!',
+    //     bank_code: 'String!',
+    //     weather: {
+    //       temperature: 12,
+    //       humidity: 123,
+    //     },
+    //   },
+    // ],
+    // };
+    console.log(resultMapping, typeof resultMapping);
     return resultMapping;
   }
 
