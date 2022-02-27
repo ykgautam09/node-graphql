@@ -33,10 +33,7 @@ export class UserService {
       await this.userRepository.save(user_);
       await this.accountService.createOne(data.ifsc_code);
     }
-    return {
-      user_id: userData.user_id,
-      user_name: userData.user_name,
-    };
+    return await this.findOne(userData.user_id);
   }
 
   async findOne(userId: number) {
@@ -48,53 +45,12 @@ export class UserService {
       accounts: [],
     };
     for (let i = 0; i < result.length; i++) {
-      ifsc_code.push(result[0].ifsc_code);
+      ifsc_code.push(result[i].ifsc_code);
     }
     for (let i = 0; i < ifsc_code.length; i++) {
       resultMapping.accounts.push(
         await this.accountService.resolveAccountWeather(ifsc_code[i]),
       );
-    }
-    // {
-    //   name: 'user1',
-    //       id: 7,
-    //     accounts: [
-    //   {
-    //     bank: 'String!',
-    //     branch: 'String!',
-    //     address: 'String!',
-    //     city: 'String!',
-    //     district: 'String!',
-    //     state: ' String!',
-    //     bank_code: 'String!',
-    //     weather: {
-    //       temperature: 12,
-    //       humidity: 123,
-    //     },
-    //   },
-    // ],
-    // };
-    console.log(resultMapping, typeof resultMapping);
-    return resultMapping;
-  }
-
-  async weather(city) {
-    const weather = await this.weatherService.getWeather(city);
-    return weather;
-  }
-
-  async accounts(userId: number) {
-    const result = await this.userRepository.find({ user_id: userId });
-    const resultMapping = [];
-    let account;
-    for (let i = 0; i < result.length; i++) {
-      account = await this.accountService.getAccountDetails(
-        result[i].ifsc_code,
-      );
-      resultMapping.push({
-        account,
-        weather: await this.weather(account.city),
-      });
     }
     return resultMapping;
   }
