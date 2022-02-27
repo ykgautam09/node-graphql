@@ -12,7 +12,7 @@ export class WeatherService {
       throw new HttpException('COUlD_NOT_GET_WEATHER_DATA', 404);
     }
     return {
-      temperature: apiResponse.data.main.temp,
+      temp: apiResponse.data.main.temp,
       humidity: apiResponse.data.main.humidity,
     };
   }
